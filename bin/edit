@@ -1,0 +1,28 @@
+#!/bin/sh
+
+DIR=`dirname $BASH_SOURCE[0]`
+TMP_DIR="${DIR}/../tmp"
+TMP_FILE_PREFIX="${TMP_DIR}/${RANDOM}"
+MEDIA_FILE=${TMP_DIR}/video.mp4
+n=4
+
+# Create 4 named pipes for 4 versions
+for ((i=0; i<$n; i++)) do
+  TMP_FILE_NAME="${TMP_FILE_PREFIX}_$i.pipe"
+  echo "---> Creating tmp file ${TMP_FILE_NAME}"
+  mkfifo -m a=+rw $TMP_FILE_NAME &
+done
+
+echo "---> Starting the editor"
+sh "${DIR}/editor_multiple" $TMP_FILE_PREFIX $MEDIA_FILE &
+
+# Events POLLIN|POLLERR|POLLHUP|POLLPRI
+for ((i=0; i<$n; i++)) do
+  TMP_FILE_NAME="${TMP_FILE_PREFIX}_$i.pipe"
+  OUTPUT_MEDIA_FILE="${TMP_FILE_PREFIX}_$i.gif"
+
+  echo "---> Reading and writing $TMP_FILE_NAME into output file"
+  cat $TMP_FILE_NAME > $OUTPUT_MEDIA_FILE
+done
+
+echo "---> Complete"

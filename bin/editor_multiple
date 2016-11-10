@@ -1,0 +1,51 @@
+#!/bin/sh
+
+#
+#   Create multiple versions
+#
+# $1 - prefix
+# $2 - media file
+#
+
+DIR=`dirname $BASH_SOURCE[0]`
+TMP_DIR="${DIR}/../tmp"
+TMP_FILE_PREFIX=$1
+MEDIA_FILE=$2
+# Number of processes
+n=4
+
+
+# Create a different version of the file
+# $1 - input
+# $2 - file name
+# $3 - file number
+function create_version {
+  echo $1 $2 $3
+
+  case $3 in
+    0) ffmpeg -i $1 -y -c:v gif -vf fps=10,scale=720:-1 -t 4 -f gif pipe:1 > $2
+    ;;
+
+    1) ffmpeg -i $1 -y -c:v gif -vf fps=10,scale=480:-1 -t 4 -f gif pipe:1 > $2
+    ;;
+
+    2) ffmpeg -i $1 -y -c:v gif -vf fps=10,scale=320:-1 -t 4 -f gif pipe:1 > $2
+    ;;
+
+    3) ffmpeg -i $1 -y -c:v gif -vf fps=10,scale=240:-1 -t 4 -f gif pipe:1 > $2
+    ;;
+  esac
+}
+
+
+#
+#   Run
+#
+echo "---> Editor started with $n processes"
+for ((i=0; i<n; i++)) do
+  TMP_FILE_NAME="${TMP_FILE_PREFIX}_${i}.pipe"
+  echo "---> Writing to $TMP_FILE_NAME"
+  # Write the video to the fifo
+  create_version $MEDIA_FILE $TMP_FILE_NAME $i
+  # ffmpeg -i $2 -y -c:v gif -vf fps=10,scale=720:-1 -t 4 -f gif pipe:1 > $TMP_FILE_NAME
+done

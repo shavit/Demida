@@ -8,4 +8,5 @@ Edit videos using named pipes (fifo), manage multiple processes.
 
 Copy a video into `tmp/video.mp4`.
 
-  1. In order to edit 1 file using the fifo run `bin/edit_1`
+  1. In order to edit multiple files run `bin/edit`
+  2. In order to edit one file using named pipe run `bin/edit_1`

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+DIR=`dirname $BASH_SOURCE[0]`
+
+echo "---> Editor started"
+
+echo "---> Writing to $1"
+echo "New message" > $1

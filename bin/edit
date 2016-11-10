@@ -1,0 +1,14 @@
+#!/bin/sh
+
+DIR=`dirname $BASH_SOURCE[0]`
+TMP_DIR="${DIR}/../tmp"
+TMP_FILE_NAME="${TMP_DIR}/${RANDOM}.pipe"
+
+echo "---> Creating tmp file ${TMP_FILE_NAME}"
+mkfifo $TMP_FILE_NAME +rw
+
+echo "---> Starting the editor"
+sh "${DIR}/editor" $TMP_FILE_NAME &
+
+echo "---> Reading"
+cat $TMP_FILE_NAME

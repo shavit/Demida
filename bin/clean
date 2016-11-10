@@ -3,4 +3,8 @@
 # Clean the named pipes
 DIR=`dirname $BASH_SOURCE[0]`
 TMP_DIR="${DIR}/../tmp"
+
 rm $TMP_DIR/*.pipe
+rm $TMP_DIR/*.gif
+
+echo "---> Direcotry tmp is clean"

@@ -1,8 +1,12 @@
 #!/bin/sh
 
 DIR=`dirname $BASH_SOURCE[0]`
+TMP_DIR="${DIR}/../tmp"
 
 echo "---> Editor started"
 
 echo "---> Writing to $1"
-echo "New message" > $1
+# echo "ffmpeg $2"  > $1
+
+# Write the video to the fifo
+ffmpeg -i $2 -y -c:v gif -vf fps=10,scale=720:-1 -t 4 -f gif pipe:1 > $1
